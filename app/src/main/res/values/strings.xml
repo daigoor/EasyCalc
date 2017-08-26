@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">EasyCalc</string>
+    <string name="etxt_first_number">First Number</string>
+    <string name="etxt_second_number">Second Number</string>
+    <string name="rbtn_add">+</string>
+    <string name="rbtn_sub">-</string>
+    <string name="rbtn_mul">*</string>
+    <string name="rbtn_div">/</string>
+    <string name="btn_result">Result</string>
+</resources>
