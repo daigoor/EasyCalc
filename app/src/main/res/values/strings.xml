@@ -7,4 +7,5 @@
     <string name="rbtn_mul">*</string>
     <string name="rbtn_div">/</string>
     <string name="btn_result">Result</string>
+    <string name="btn_history">History</string>
 </resources>

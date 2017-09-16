@@ -16,6 +16,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
     }
 }
 
@@ -26,5 +27,8 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    compile 'com.google.code.gson:gson:2.8.1'
+
     testCompile 'junit:junit:4.12'
 }

@@ -1,8 +1,8 @@
-package edu.ibda.training.android;
+package edu.ibda.training.android.activities.impl;
 
-import android.support.annotation.IdRes;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,45 +14,50 @@ import android.widget.Toast;
 import org.json.JSONArray;
 
 import java.util.Arrays;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements
+import edu.ibda.training.android.R;
+import edu.ibda.training.android.activities.AbstractActivity;
+import edu.ibda.training.android.beans.Raw;
+import edu.ibda.training.android.database.DatabaseSources;
+import edu.ibda.training.android.database.SharedPrefManager;
+import edu.ibda.training.android.utils.Constants;
+import edu.ibda.training.android.utils.Utils;
+
+public class MainActivity extends AbstractActivity implements
         View.OnClickListener, RadioGroup.OnCheckedChangeListener/* , CompoundButton.OnCheckedChangeListener */{
 
     private static final String TAG = "MainActivity";
 
-    private enum operation {
-        add, sub, mul, div
-    }
-
-    private Button result;
+    private Button result, history;
     private EditText firstNumber, secondNumber;
     private RadioGroup radioBtnGroup;
     private RadioButton add, sub, mul, div;
 
+    private Constants.OPERATIONS selectedOp;
 
-
-    private operation selectedOp;
+    private DatabaseSources ds;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        init(R.layout.activity_main);
-    }
-
-    private void init (int layout) {
-        setContentView(layout);
+    protected void init () {
         loadViews();
         setListeners();
     }
 
+    @Override
+    protected int loadLayout() {
+        return R.layout.main_layout;
+    }
+
     private void loadViews () {
         this.result = (Button) findViewById(R.id.btn_result);
+        this.history = (Button) findViewById(R.id.btn_history);
         this.firstNumber = (EditText) findViewById(R.id.etxt_first_number);
         this.secondNumber = (EditText) findViewById(R.id.etxt_second_number);
         this.radioBtnGroup = (RadioGroup) findViewById(R.id.rbtn_group);
         this.add = (RadioButton) findViewById(R.id.rbtn_add);
         this.add.setChecked(true);
-        this.selectedOp = operation.add;
+        this.selectedOp = Constants.OPERATIONS.add;
         this.sub = (RadioButton) findViewById(R.id.rbtn_sub);
         this.mul = (RadioButton) findViewById(R.id.rbtn_mul);
         this.div = (RadioButton) findViewById(R.id.rbtn_div);
@@ -60,35 +65,38 @@ public class MainActivity extends AppCompatActivity implements
 
     private void setListeners() {
         this.result.setOnClickListener(this);
+        this.history.setOnClickListener(this);
         this.radioBtnGroup.setOnCheckedChangeListener(this);
     }
 
-    private void CalcResult (operation op) throws Exception{
+    private void CalcResult (Constants.OPERATIONS operation) throws Exception{
 
         double result = 0;
         double firstVal = getDoubleValueFromEditText(firstNumber);
         double secondVal = getDoubleValueFromEditText(secondNumber);
-        String opStr = null;
-        if(op == operation.add) {
-            int x = 0;
-            int y = 1;
 
-            int r = y / x;
-
+        if(operation == Constants.OPERATIONS.add) {
             result =  firstVal + secondVal ;
-            opStr = getString(R.string.rbtn_add);
-        } else if (op == operation.sub) {
+
+        } else if (operation == Constants.OPERATIONS.sub) {
             result =  firstVal - secondVal ;
-            opStr = getString(R.string.rbtn_sub);
-        } else if (op == operation.mul) {
+
+        } else if (operation == Constants.OPERATIONS.mul) {
             result = firstVal * secondVal ;
-            opStr = getString(R.string.rbtn_mul);
-        } else if (op == operation.div) {
+
+        } else if (operation == Constants.OPERATIONS.div) {
             result =  firstVal / secondVal ;
-            opStr = getString(R.string.rbtn_div);
+
         }
 
-        showMessage("Operation : " +firstVal + " " + opStr + " " + secondVal + " = " + result);
+        //SharedPrefManager.getInstance(this).setHistory(new Raw(firstVal, secondVal, operation));
+
+        ds = new DatabaseSources(this);
+        ds.open();
+        ds.addToHistory(new Raw(firstVal, secondVal, operation));
+        ds.close();
+
+        showMessage("Operation : " +firstVal + " " + Utils.getOperationDisplayForm(operation, this) + " " + secondVal + " = " + result);
     }
 
     private double getDoubleValueFromEditText (EditText etxt) throws Exception{
@@ -104,14 +112,39 @@ public class MainActivity extends AppCompatActivity implements
             throw e;
         }
     }
-    private void showMessage (String text) {
-        Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+
+    private void showHistory () {
+        Intent intent = new Intent(this, HistoryActivity.class);
+        Bundle budle = new Bundle();
+        budle.putString("key", "value");
+        intent.putExtras(budle);
+        intent.putExtra("ekey", "evalue");
+        startActivity(intent);
+        startActivityForResult(intent , 10);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 10) {
+            if(requestCode == RESULT_OK) {
+                String dxx = data.getStringExtra("blabla");
+            }
+        }
     }
 
     @Override
     public void onClick(View v) {
         try {
-            CalcResult(this.selectedOp);
+            switch (v.getId()) {
+                case R.id.btn_history:
+                    showHistory();
+                    break;
+                case R.id.btn_result:
+                    CalcResult(this.selectedOp);
+                    break;
+            }
+
         } catch (Exception e) {
             Log.e(TAG, "Could not complete op. Please check logs");
             showMessage("Error detected!");
@@ -125,16 +158,16 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.rbtn_group :
                 switch (group.getCheckedRadioButtonId()) {
                     case R.id.rbtn_add :
-                        this.selectedOp = operation.add;
+                        this.selectedOp = Constants.OPERATIONS.add;
                         break;
                     case R.id.rbtn_sub :
-                        this.selectedOp = operation.sub;
+                        this.selectedOp = Constants.OPERATIONS.sub;
                         break;
                     case R.id.rbtn_mul :
-                        this.selectedOp = operation.mul;
+                        this.selectedOp = Constants.OPERATIONS.mul;
                         break;
                     case R.id.rbtn_div :
-                        this.selectedOp = operation.div;
+                        this.selectedOp = Constants.OPERATIONS.div;
                         break;
                 }
                 break;
