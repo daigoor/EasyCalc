@@ -49,4 +49,5 @@ public class HistoryAdaptter extends ArrayAdapter<Raw> {
     public int getCount() {
         return raws.size();
     }
+
 }

@@ -9,18 +9,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 
 import java.util.Arrays;
-import java.util.List;
 
 import edu.ibda.training.android.R;
 import edu.ibda.training.android.activities.AbstractActivity;
 import edu.ibda.training.android.beans.Raw;
 import edu.ibda.training.android.database.DatabaseSources;
 import edu.ibda.training.android.database.SharedPrefManager;
+import edu.ibda.training.android.therads.HttpAsnycTaskRequester;
+import edu.ibda.training.android.therads.HttpThreadRequester;
 import edu.ibda.training.android.utils.Constants;
 import edu.ibda.training.android.utils.Utils;
 
@@ -40,8 +40,15 @@ public class MainActivity extends AbstractActivity implements
 
     @Override
     protected void init () {
-        loadViews();
-        setListeners();
+        if (SharedPrefManager.getInstance(this).isLoaded()) {
+            loadViews();
+            setListeners();
+        } else {
+            Intent intent = new Intent(this, LoadingActivity.class);
+            startActivity(intent);
+            this.finish();
+        }
+
     }
 
     @Override
@@ -89,7 +96,7 @@ public class MainActivity extends AbstractActivity implements
 
         }
 
-        //SharedPrefManager.getInstance(this).setHistory(new Raw(firstVal, secondVal, operation));
+        SharedPrefManager.getInstance(this).setHistory(new Raw(firstVal, secondVal, operation));
 
         ds = new DatabaseSources(this);
         ds.open();
@@ -114,7 +121,7 @@ public class MainActivity extends AbstractActivity implements
     }
 
     private void showHistory () {
-        Intent intent = new Intent(this, HistoryActivity.class);
+        Intent intent = new Intent(this, RecHistoryActivity.class);
         Bundle budle = new Bundle();
         budle.putString("key", "value");
         intent.putExtras(budle);
@@ -189,4 +196,6 @@ public class MainActivity extends AbstractActivity implements
 //                break;
 //        }
 //    }
+
+
 }

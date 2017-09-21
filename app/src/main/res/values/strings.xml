@@ -8,4 +8,6 @@
     <string name="rbtn_div">/</string>
     <string name="btn_result">Result</string>
     <string name="btn_history">History</string>
+    <string name="title_activity_rec_history">RecHistoryActivity</string>
+    <string name="tv_loading">LOADING</string>
 </resources>

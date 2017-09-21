@@ -33,7 +33,7 @@ public class SharedPrefManager {
         sharedPref = this.context.getSharedPreferences(Constants.SP_NAME, context.MODE_PRIVATE);
     }
 
-    public static SharedPrefManager getInstance (Context context) {
+    public static synchronized SharedPrefManager getInstance (Context context) {
         if (instance == null) {
             instance = new SharedPrefManager(context);
         }
@@ -70,4 +70,19 @@ public class SharedPrefManager {
         return array;
     }
 
+    public boolean isLoaded() {
+        return this.sharedPref.getBoolean("is_loadedx", false);
+    }
+
+    public void setLoaded () {
+        SharedPreferences.Editor editor = this.sharedPref.edit();
+        editor.putBoolean("is_loadedx", true);
+        editor.commit();
+    }
+
+    public void disableLoaded () {
+        SharedPreferences.Editor editor = this.sharedPref.edit();
+        editor.putBoolean("is_loadedx", false);
+        editor.commit();
+    }
 }
