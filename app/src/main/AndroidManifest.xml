@@ -3,6 +3,7 @@
     package="edu.ibda.training.android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -11,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.impl.MainActivity">
+        <activity android:name=".activities.impl.LoadingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,7 +21,15 @@
         </activity>
         <activity android:name=".activities.impl.HistoryActivity" />
         <activity android:name=".activities.impl.RecHistoryActivity" />
-        <activity android:name=".activities.impl.LoadingActivity" />
+        <activity android:name=".activities.impl.MainActivity" />
+        <service android:name=".services.DowaloadIntentService" />
+        <service android:name=".services.DownloadService" />
+        <receiver android:name=".broadcast.ExternalBroadcastReciver" >
+            <intent-filter>
+                <action android:name="easycalc.external.broadcast"></action>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

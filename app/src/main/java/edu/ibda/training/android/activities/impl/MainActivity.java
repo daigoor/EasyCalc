@@ -1,14 +1,21 @@
 package edu.ibda.training.android.activities.impl;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 
@@ -38,22 +45,55 @@ public class MainActivity extends AbstractActivity implements
 
     private DatabaseSources ds;
 
+    private  LinearLayout ll;
     @Override
     protected void init () {
-        if (SharedPrefManager.getInstance(this).isLoaded()) {
+
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        manager.cancel(100);
+
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View notificationView = inflater.inflate(R.layout.internal_notification_layout, null, false);
+        ImageView imgv = (ImageView) notificationView.findViewById(R.id.imgv_user);
+        ll = (LinearLayout) findViewById(R.id.notification_place_holder);
+        ll.addView(notificationView);
+
+        Picasso.with(this).load("http://i.imgur.com/DvpvklR.png").placeholder(R.drawable.ic_home_white_24dp).into(imgv);
+
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    sleep(1000 * 5);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ll.removeAllViews();
+                        }
+                    });
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }.start();
+
+
+//        if (SharedPrefManager.getInstance(this).isLoaded()) {
             loadViews();
             setListeners();
-        } else {
-            Intent intent = new Intent(this, LoadingActivity.class);
-            startActivity(intent);
-            this.finish();
-        }
+//        } else {
+//            Intent intent = new Intent(this, LoadingActivity.class);
+//            startActivity(intent);
+//            this.finish();
+//        }
 
     }
 
     @Override
     protected int loadLayout() {
-        return R.layout.main_layout;
+        return R.layout.main_oriant_layout;
     }
 
     private void loadViews () {
