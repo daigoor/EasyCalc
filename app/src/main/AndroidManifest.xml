@@ -12,6 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".activities.impl.LoadingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,14 +20,49 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activities.ViewPagerTest"
+            android:label="ViewPager">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activities.TabbedActivity"
+            android:label="Tabbed"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activities.NavActivity"
+            android:label="Nav"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".activities.impl.HistoryActivity" />
         <activity android:name=".activities.impl.RecHistoryActivity" />
         <activity android:name=".activities.impl.MainActivity" />
+
         <service android:name=".services.DowaloadIntentService" />
         <service android:name=".services.DownloadService" />
-        <receiver android:name=".broadcast.ExternalBroadcastReciver" >
+
+        <receiver android:name=".broadcast.ExternalBroadcastReciver">
             <intent-filter>
-                <action android:name="easycalc.external.broadcast"></action>
+                <action android:name="easycalc.external.broadcast" />
             </intent-filter>
         </receiver>
 

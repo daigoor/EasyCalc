@@ -10,4 +10,11 @@
     <string name="btn_history">History</string>
     <string name="title_activity_rec_history">RecHistoryActivity</string>
     <string name="tv_loading">LOADING</string>
+    <string name="title_activity_tabbed">TabbedActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_nav_activity">Nav_activity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>
